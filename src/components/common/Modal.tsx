@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect, ReactNode, useCallback } from 'react'
+import React, { Dispatch, SetStateAction, useEffect, ReactNode, useCallback, cloneElement } from 'react'
 import Portal from './Portal'
 import { ModalState } from '@/App'
 
@@ -8,20 +8,24 @@ type ModalInitialState = {
 }
 
 type ModalContentState = {
-    children?: ReactNode;
-    content: string | JSX.Element | ReactNode;
+    children: ReactNode | Function;
+    initial: string | object | Function | any | null;
 }
 
-const ModalBody = ({ content } : ModalContentState) => {
+const ModalBody = ({ children, initial }: ModalContentState) => {
+    // if (typeof content === 'string') return <div>{content}</div>
+    // else if (typeof content === 'object') return <div>{content}</div>
+    // else if (typeof content === 'function') return <div>{content()}</div>
+    
+    const _children = typeof children === 'function' ? children(initial) : typeof children === 'string' ? children : cloneElement(children as any, {...initial})
+
     return (
-        <div>
-            {content}
-        </div>
+        <div>{_children}</div>
     )
 }
 
 const Modal = ({ data, set } : ModalInitialState) => {
-    const { title, sub, content, complete = '확인', cancel = '취소', onComplete, onCancel } = data
+    const { title, sub, content, initial = {}, complete = '확인', cancel = '취소', onComplete, onCancel } = data
 
     const onCompleteHandler = useCallback(() => {
         onComplete()
@@ -43,7 +47,9 @@ const Modal = ({ data, set } : ModalInitialState) => {
                     <section className='modal__container'>
                         {sub && <h2>{sub}</h2>}
                         <div className='modal__content'>
-                            <ModalBody content={content} />
+                            <ModalBody initial={initial}>
+                                {content}
+                            </ModalBody>
                         </div>
                     </section>
                     <footer>

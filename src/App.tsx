@@ -7,6 +7,7 @@ import Router from '@/router/index'
 export type ModalState = {
     title?: string;
     sub?: string;
+    initial?: any;
     content: any;
     complete?: string,
     cancel?: string,
