@@ -1,17 +1,17 @@
-import React, { useState, createContext, useEffect } from "react"
-import Modal from '@/components/common/Modal'
+import { useState, createContext, useEffect } from "react"
+import Modal from '@/components/common/modal/Main'
 import Router from '@/router/index'
-
-
+import "@/asset/css/App.css"
 
 export type ModalState = {
     title?: string;
     sub?: string;
     initial?: any;
+    size?: string;
     content: any;
     complete?: string,
     cancel?: string,
-    onComplete: () => void;
+    onComplete: (props: any) => void;
     onCancel: () => void
 }
 
